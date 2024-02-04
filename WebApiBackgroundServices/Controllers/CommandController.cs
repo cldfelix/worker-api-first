@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApiBackgroundServices.Domain;
 using WebApiBackgroundServices.Repository;
+using WebApiBackgroundServices.Services;
 
 namespace WebApiBackgroundServices.Controllers
 {
@@ -14,10 +15,12 @@ namespace WebApiBackgroundServices.Controllers
     public class CommandController : ControllerBase
     {
         private ICommandRepository _commandRepository;
+        private IChatProService _chatProService;
 
-        public CommandController(ICommandRepository commandRepository)
+        public CommandController(ICommandRepository commandRepository, IChatProService chatProService)
         {
             _commandRepository = commandRepository;
+            _chatProService = chatProService;
         }
 
         [HttpPost]
@@ -26,6 +29,13 @@ namespace WebApiBackgroundServices.Controllers
             _commandRepository.SetMessage(message);
 
             return Ok(_commandRepository.GetMessage());
+        }
+
+        [HttpGet]
+        public IActionResult GetToken()
+        {
+            _chatProService.GetTokenMessage();
+            return Ok();
         }
     }
 }
